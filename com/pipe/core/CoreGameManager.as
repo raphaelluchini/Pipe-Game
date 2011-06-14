@@ -59,7 +59,7 @@ package pipe.core
 		 */
 		public function initVerification():void 
 		{
-			timer = new Timer(4000);
+			timer = new Timer(3000);
 			timer.addEventListener(TimerEvent.TIMER, onTimer);
 			currentQuad = quadrantManager.getQuadrant(initQuadrant[0], initQuadrant[1]);
 			timer.start();
@@ -79,8 +79,9 @@ package pipe.core
 					if (nextQuad.piace.piaceData.path[1] != -1)
 					{
 						currentQuad = nextQuad;
-						currentQuad.piace.isInteractive = false;
+						currentQuad.piace.executePiece();
 						dispatchEvent(new CoreGameManagerEvent(CoreGameManagerEvent.CHANGE_PIECE));
+						trace("Next Piece")
 					}
 					else
 					{

@@ -81,12 +81,12 @@
 		public function getQuadrant(xRef:int, yRef:int):UIQuadrant
 		{
 			//_stageRef[xRef][yRef].gotoAndStop(2);
-			if (xRef >= _stageRef.length)
+			if (_stageRef[xRef] == null)
 			{
 				return null
 			}
 			
-			if (yRef >= _stageRef[xRef].length)
+			if (_stageRef[xRef][yRef] == null)
 			{
 				return null
 			}

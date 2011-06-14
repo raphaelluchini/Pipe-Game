@@ -198,6 +198,19 @@ package pipe.ui
 			}
 		}
 		
+		public function executePiece():void
+		{
+			this.isInteractive = false;
+			if (this._piaceData.pathNumEnter == 0)
+			{
+				_skin.animation.gotoAndPlay("init_2");
+			}
+			else if(this._piaceData.pathNumEnter == 1)
+			{
+				_skin.animation.gotoAndPlay("init_1");
+			}
+		}
+		
 		/**
 		 * Get the data of piece
 		 */
@@ -237,7 +250,6 @@ package pipe.ui
 			}
 			else
 			{
-				this.alpha = 0.5;
 				killInteraction();
 			}
 		}

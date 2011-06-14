@@ -24,6 +24,7 @@ package pipe.core
 		private var cacheX:Number;
 		private var cacheY:Number;
 		private var cacheQuadrant:UIQuadrant;
+		private var cachePiece:UIPiece;
 		
 		/**
 		 * The cinstructor method needs the piece x and y for know where the pieces is added
@@ -46,7 +47,7 @@ package pipe.core
 			_piece.x = _pieceX;
 			_piece.y = _pieceY;
 			_piece.setPieceType(PieceType.NORMAL);
-			_piece.addEventListener(MouseEvent.MOUSE_UP, mUp);
+			
 			_piece.addEventListener(MouseEvent.MOUSE_DOWN, mDown);
 			addChild(_piece);
 			return _piece
@@ -60,20 +61,26 @@ package pipe.core
 		 */
 		private function mDown(event:MouseEvent):void 
 		{
-			var currentPiece:UIPiece = event.currentTarget as UIPiece
-			DepthManager.bringToTop(currentPiece);
-			cacheX = currentPiece.x;
-			cacheY = currentPiece.y;
 			
-			var xGrid:int = quadrantManager.quadrantsWidth;
-			var yGrid:int = quadrantManager.quadrantsHeight;
-			var xQuadRef:int = Math.floor(stage.mouseX / xGrid);
-			var yQuadRef:int = Math.floor(stage.mouseY / yGrid);
-			
-			cacheQuadrant = quadrantManager.getQuadrant(xQuadRef, yQuadRef);
-			if (cacheQuadrant)
+			var currentPiece:UIPiece = event.currentTarget as UIPiece;
+			if (currentPiece.isInteractive)
 			{
-				cacheQuadrant.piace = null;
+				stage.addEventListener(MouseEvent.MOUSE_UP, mUp);
+				cachePiece = event.currentTarget as UIPiece;
+				DepthManager.bringToTop(currentPiece);
+				cacheX = currentPiece.x;
+				cacheY = currentPiece.y;
+				
+				var xGrid:int = quadrantManager.quadrantsWidth;
+				var yGrid:int = quadrantManager.quadrantsHeight;
+				var xQuadRef:int = Math.floor(stage.mouseX / xGrid);
+				var yQuadRef:int = Math.floor(stage.mouseY / yGrid);
+				
+				cacheQuadrant = quadrantManager.getQuadrant(xQuadRef, yQuadRef);
+				if (cacheQuadrant)
+				{
+					cacheQuadrant.piace = null;
+				}
 			}
 		}
 		
@@ -119,36 +126,41 @@ package pipe.core
 		 */
 		private function mUp(event:MouseEvent):void 
 		{
-			var currentPiece:UIPiece = event.currentTarget as UIPiece;
+			stage.removeEventListener(MouseEvent.MOUSE_UP, mUp);
 			var xGrid:int = quadrantManager.quadrantsWidth;
 			var yGrid:int = quadrantManager.quadrantsHeight;
-			var xQuadRef:int = Math.floor(currentPiece.x / xGrid);
-			var yQuadRef:int = Math.floor(currentPiece.y / yGrid);
+			var xQuadRef:int = Math.floor(cachePiece.x / xGrid);
+			var yQuadRef:int = Math.floor(cachePiece.y / yGrid);
 			
-			if (xQuadRef < quadrantManager.quadrantsNumX && yQuadRef < quadrantManager.quadrantsNumY)
+			var quad:UIQuadrant = quadrantManager.getQuadrant(xQuadRef, yQuadRef);
+			//verifica se está dentro do quadrant
+			if (quad != null)
 			{
-				var quad:UIQuadrant = quadrantManager.getQuadrant(xQuadRef, yQuadRef);
 				if (quad.piace == null)
 				{
-					addToQuadrant(currentPiece, quad);
+					addToQuadrant(cachePiece, quad);
 				}
 				else
 				{
-					if (currentPiece.isDrag)
+					cachePiece.x = cacheX;
+					cachePiece.y = cacheY;
+					if (cacheQuadrant)
 					{
-						currentPiece.x = cacheX;
-						currentPiece.y = cacheY;
+						cacheQuadrant.piace = cachePiece;
 					}
 				}
 			}
 			else
 			{
-				if (currentPiece.isDrag)
+				cachePiece.x = cacheX;
+				cachePiece.y = cacheY;
+				if (cacheQuadrant)
 				{
-					currentPiece.x = cacheX;
-					currentPiece.y = cacheY;
+					cacheQuadrant.piace = cachePiece;
 				}
 			}
+			cacheQuadrant = null;
+			cachePiece = null;
 		}
 		
 		/**
