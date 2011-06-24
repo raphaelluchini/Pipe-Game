@@ -1,6 +1,8 @@
 package pipe.core 
 {
 	import pipe.core.events.CoreGameManagerEvent;
+	import pipe.core.piace.Piece;
+	import pipe.core.piace.PieceType;
 	import pipe.core.quadrant.QuadrantManager;
 	import pipe.ui.UIPiece;
 	import pipe.ui.UIQuadrant;
@@ -25,13 +27,16 @@ package pipe.core
 		/**
 		 * Reference of finish quadrant for finish piece.
 		 */
-		private var finishQuadrant:Array = [7, 7];
+		private var finishQuadrant:Array = [3, 2];
 		
 		/**
 		 * Current quadrand to verify.
 		 */
 		private var currentQuad:UIQuadrant;
 		
+		private var currentExit:int;
+		private var currentEntrance:int;
+		private var nextEntrance:int 
 		/**
 		 * Constructor method is necessary for create the CoreGameManager.
 		 * @param	needs the coreGame for create and manege the pieces/quadrants
@@ -70,25 +75,39 @@ package pipe.core
 		 * @param	event
 		 */
 		private function onTimer(event:TimerEvent):void 
-		{
-			var nextQuad:UIQuadrant = quadrantManager.getNext(currentQuad);
+		{			
+			if (currentQuad.piace.getPieceType() == PieceType.START)
+			{
+				currentEntrance = currentQuad.piace.piaceData.path[0][0];
+				currentExit = currentQuad.piace.piaceData.path[0][1];
+			}
+			else
+			{
+				currentEntrance = nextEntrance;
+				currentExit = currentQuad.piace.piaceData.getExitSide(currentEntrance);
+			}
+			
+			nextEntrance = currentQuad.piace.piaceData.getEntraceSide(currentExit);
+			
+			var nextQuad:UIQuadrant = quadrantManager.getNext(currentQuad, currentExit);
 			if (nextQuad.piace)
 			{
-				if (verificatonOfPaths(currentQuad.piace, nextQuad.piace))
+				if (nextQuad.piace.piaceData.isEntraceSideValid(nextEntrance))
 				{
-					if (nextQuad.piace.piaceData.path[1] != -1)
-					{
-						currentQuad = nextQuad;
-						currentQuad.piace.executePiece();
-						dispatchEvent(new CoreGameManagerEvent(CoreGameManagerEvent.CHANGE_PIECE));
-						trace("Next Piece")
-					}
-					else
+					if (nextQuad.piace.getPieceType() == PieceType.FINISH)
 					{
 						timer.stop();
 						dispatchEvent(new CoreGameManagerEvent(CoreGameManagerEvent.GAME_WIN));
 						trace("Winner - Game Over")
-					}					
+					}
+					else
+					{
+						currentQuad = nextQuad;
+						nextQuad = null;
+						currentQuad.piace.executePiece(nextEntrance);
+						dispatchEvent(new CoreGameManagerEvent(CoreGameManagerEvent.CHANGE_PIECE));
+						trace("Next Piece")
+					}		
 				}
 				else
 				{
@@ -103,39 +122,6 @@ package pipe.core
 				dispatchEvent(new CoreGameManagerEvent(CoreGameManagerEvent.GAME_LOSE));
 				trace("Haven't piece - Game Over")
 			}
-		}
-		
-		/**
-		 * Varifys if the path of 2 pieces have comunication.
-		 * @param	p1
-		 * @param	p2
-		 * @return if have or no a comunication in paths
-		 */
-		private function verificatonOfPaths(p1:UIPiece, p2:UIPiece):Boolean 
-		{
-			(p1.piaceData.pathNumEnter == 0) ? p1.piaceData.pathNumEnter = 1 : p1.piaceData.pathNumEnter = 0;
-			var p1NumExit:int = p1.piaceData.path[p1.piaceData.pathNumEnter];
-			var p2NumEnter:int = 0;
-			
-			//opposite side of piece
-			if ((p1NumExit + 2) > 3)
-			{
-				p2NumEnter = ((p1NumExit + 2) - 4);
-			}
-			else
-			{
-				p2NumEnter = p1NumExit + 2;
-			}
-			
-			for (var i:int = 0; i < p2.piaceData.path.length; i++) 
-			{
-				if (p2.piaceData.path[i] == p2NumEnter)
-				{
-					p2.piaceData.pathNumEnter = i;
-					return true;
-				}
-			}
-			return false
 		}
 		
 	}

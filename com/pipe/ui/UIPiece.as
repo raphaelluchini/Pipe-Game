@@ -1,6 +1,7 @@
 package pipe.ui 
 {
 	import pipe.core.piace.Piece;
+	import pipe.core.piace.PiecePathName;
 	import pipe.core.piace.PieceType;
 	import pipe.skin.Skin;
 	import pipe.ui.UIObject;
@@ -15,10 +16,10 @@ package pipe.ui
 	{
 		private var _piaceData:Piece;
 		private var _isDrag:Boolean;
-		private var addedOnStage:Boolean;
 		private var _isInteractive:Boolean;
 		private var _skin:UIObject;
-		private var _pieceType:String;
+		protected var _pieceType:String;
+		private var addedOnStage:Boolean;
 		
 		/**
 		 * Set the type of pice
@@ -26,12 +27,13 @@ package pipe.ui
 		 */
 		public function UIPiece(type:String = "normal-piece") 
 		{
-			_pieceType = type;
 			_isInteractive = isInteractive;
 			_piaceData = new Piece();
 			
 			_skin = Skin.piece();
 			addChild(_skin);
+			
+			setPieceType(type);
 			
 			this.mouseChildren = false;
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -50,7 +52,7 @@ package pipe.ui
 		
 		/**
 		 * Dispatched when added to Stage
-		 * add listeners if have pemition
+		 * add listeners of interaction if have permition
 		 * @param	event
 		 */
 		private function onAddedToStage(event:Event):void 
@@ -89,58 +91,6 @@ package pipe.ui
 			this.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			this.stopDrag();
 			this.isDrag = false;
-		}
-		
-		/**
-		 * Get type of piece ( PieceType.as )
-		 * If is Start piece
-		 * If is Finish piece
-		 * If is Normal piece
-		 * @return nae of type
-		 */
-		public function getPieceType():String 
-		{
-			return _pieceType;
-		}
-		
-		/**
-		 * Set the type of piece ( PieceType.as )
-		 * If is Start piece
-		 * If is Finish piece
-		 * If is Normal piece
-		 * @param value
-		 */
-		public function setPieceType(value:String):void 
-		{
-			_pieceType = value;
-			
-			switch (_pieceType) 
-			{
-				
-				case PieceType.FINISH:
-				{
-					_skin.gotoAndStop(4);
-					_piaceData.isNew = false;
-					_isInteractive = false;
-					this.killInteraction();
-					break;
-				}
-				case PieceType.START:
-				{
-					_skin.gotoAndStop(4);
-					_piaceData.isNew = false;
-					_isInteractive = false;
-					this.killInteraction();
-					break;
-				}
-				default:
-				{
-					_piaceData.isNew = true;
-					_isInteractive = true;
-					_skin.gotoAndStop(_piaceData.pathNumber + 1);
-					break;
-				}
-			}
 		}
 		
 		/**
@@ -198,16 +148,89 @@ package pipe.ui
 			}
 		}
 		
-		public function executePiece():void
+		/**
+		 * Get type of piece ( PieceType.as )
+		 * @see PieceType.as
+		 * @return nae of type
+		 */
+		public function getPieceType():String 
+		{
+			return _pieceType;
+		}
+		
+		/**
+		 * Set the type of piece ( PieceType.as )
+		 * @see PieceType.as
+		 * @param value
+		 */
+		public function setPieceType(value:String):void 
+		{
+			_pieceType = value;
+			
+			switch (_pieceType) 
+			{
+				
+				case PieceType.FINISH:
+				{
+					_skin.gotoAndStop(4);
+					_piaceData.isNew = false;
+					_isInteractive = false;
+					this.killInteraction();
+					break;
+				}
+				case PieceType.START:
+				{
+					_skin.gotoAndStop(4);
+					_piaceData.isNew = false;
+					_isInteractive = false;
+					this.killInteraction();
+					break;
+				}
+				default:
+				{
+					_piaceData.isNew = true;
+					_isInteractive = true;
+					_skin.gotoAndStop(_piaceData.pathNumber + 1);
+					break;
+				}
+			}
+		}
+		
+		/**
+		 * Execute the animations 
+		 * @param	side of enter liquid
+		 */
+		public function executePiece(side:int):void
 		{
 			this.isInteractive = false;
-			if (this._piaceData.pathNumEnter == 0)
+			if (_piaceData.pathName == PiecePathName.ONE_LINE || _piaceData.pathName == PiecePathName.ONE_CURVE)
 			{
-				_skin.animation.gotoAndPlay("init_2");
+				if (_piaceData.rotationNumber != side)
+				{
+					_skin.animation.gotoAndPlay("init_1");
+				}
+				else
+				{
+					_skin.animation.gotoAndPlay("init_2");
+				}
 			}
-			else if(this._piaceData.pathNumEnter == 1)
-			{
-				_skin.animation.gotoAndPlay("init_1");
+			else if (_piaceData.pathName == PiecePathName.TWO_CURVES)
+			{				
+				var paths:Array = [ { path:1, side:2 }, { path:2, side:1 }, { path:2, side:2 }, { path:1, side:1 } ];
+				var value:Number = side - _piaceData.rotationNumber;
+				if (value < 0)
+				{
+					value = value + 4;
+				}
+				
+				if(paths[value].path == 1)
+				{
+					_skin.animation.gotoAndPlay("init_" + paths[value].side);
+				}
+				else if(paths[value].path == 2)
+				{
+					_skin.animation1.gotoAndPlay("init_" + paths[value].side);
+				}
 			}
 		}
 		

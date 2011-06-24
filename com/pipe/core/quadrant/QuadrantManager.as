@@ -121,18 +121,12 @@
 		 * @param	quadrant
 		 * @return returns the next UIQuadrant
 		 */
-		public function getNext(quadrant:UIQuadrant):UIQuadrant
+		public function getNext(quadrant:UIQuadrant, side:int):UIQuadrant
 		{
 			if (quadrant.piace != null)
 			{
 				var quadData:Quadrant = quadrant.quadrantData;
-				var nextNumEnter:int = quadrant.piace.piaceData.pathNumEnter;
-				var nextNumExit:int = 1;
-				if (nextNumEnter == 1)
-				{
-					nextNumExit = 0;
-				}
-				switch (quadrant.piace.piaceData.path[nextNumExit]) 
+				switch (side) 
 				{
 					case PieceSide.TOP:
 					{

@@ -93,7 +93,7 @@ package pipe.core
 		public function createInitPiece(xRef:int, yRef:int):UIPiece 
 		{
 			var initPiece:UIPiece = new UIPiece();
-			initPiece.piaceData.path = [-1, 2];
+			initPiece.piaceData.path = [[-1, 2]];
 			initPiece.setPieceType(PieceType.START);
 			addChild(initPiece);
 			var quad:UIQuadrant = quadrantManager.getQuadrant(xRef, yRef);
@@ -110,7 +110,7 @@ package pipe.core
 		public function createFinishPiece(xRef:int, yRef:int):UIPiece 
 		{
 			var initPiece:UIPiece = new UIPiece();
-			initPiece.piaceData.path = [2, -1];
+			initPiece.piaceData.path = [[2, -1]];
 			initPiece.setPieceType(PieceType.FINISH);
 			addChild(initPiece);
 			var quad:UIQuadrant = quadrantManager.getQuadrant(xRef, yRef);

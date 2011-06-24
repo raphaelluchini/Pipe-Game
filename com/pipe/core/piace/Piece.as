@@ -9,7 +9,11 @@ package pipe.core.piace
 		/**
 		 * Array of paths that contains the numerical sides of their entries and outputs.
 		 */
-		protected var paths:Array = [[0, 2], [0, 1]];
+		protected var paths:Array = [
+		[[0, 2]],
+		[[0, 1]],
+		[[0, 3],[1, 2]]
+		];
 		
 		/**
 		 * Array of selected path that contains the numerical side of their entrie and output.
@@ -22,10 +26,14 @@ package pipe.core.piace
 		protected var _pathNumber:int;
 		
 		/**
-		 * Number of selected path or index in path in array of paths.
-		 * 0 or 1
+		 * The name of type path.
 		 */
-		protected var _pathNumEnter:int = 0;
+		protected var _pathName:String;
+		
+		/**
+		 * The number of rotations (max 3)
+		 */
+		protected var _rotationNumber:int = 0;
 		
 		/**
 		 * Defines if is a new piece (never added in a quadrant).
@@ -37,13 +45,53 @@ package pipe.core.piace
 		 */
 		protected var _used:Boolean = false;
 		
+		
 		/**
 		 * Contructor method create the random path
 		 */
 		public function Piece() 
 		{
-			pathNumber = Math.round(randomNumber(0,1))
-			path = paths[pathNumber];
+			_pathNumber = 2
+			_path = paths[pathNumber];
+			
+			switch(pathNumber)
+			{
+				case 0:
+				{
+					_pathName = PiecePathName.ONE_LINE;
+					break;
+				}
+				case 1:
+				{
+					_pathName = PiecePathName.ONE_CURVE;
+					break;
+				}
+				case 2:
+				{
+					_pathName = PiecePathName.TWO_CURVES;
+					break;
+				}
+			}
+		}
+		
+		/**
+		 * Search the corrent path with the enter path number
+		 * @param	enter
+		 * @return array
+		 */
+		public function searchPath(enter:int):Array
+		{
+			for (var i:int = 0; i < paths.length; i++) 
+			{
+				for (var j:int = 0; j < paths[i].length; j++) 
+				{
+					if (paths[i][j] == enter)
+					{
+						return paths[i];
+					}
+				}
+			}
+			return null;
 		}
 		
 		/**
@@ -51,16 +99,22 @@ package pipe.core.piace
 		 */
 		public function rotateRight():void
 		{
-			for (var i:int = 0; i < paths.length; i++) 
+			for (var i:int = 0; i < _path.length; i++) 
 			{
-				for (var j:int = 0; j < paths[i].length; j++) 
+				for (var j:int = 0; j < _path[i].length; j++) 
 				{
-					paths[i][j] += 1;
-					if (paths[i][j] > 3)
-					{
-						paths[i][j] = 0;
-					}
+						_path[i][j] += 1;
+						
+						if (_path[i][j] > 3)
+						{
+							_path[i][j] = 0;
+						}
 				}
+			}
+			_rotationNumber += 1;
+			if (_rotationNumber > 3)
+			{
+				_rotationNumber = 0;
 			}
 		}
 		
@@ -69,21 +123,27 @@ package pipe.core.piace
 		 */
 		public function rotateLeft():void
 		{
-			for (var i:int = 0; i < paths.length; i++) 
+			for (var i:int = 0; i < _path.length; i++) 
 			{
-				for (var j:int = 0; j < paths[i].length; j++) 
+				for (var j:int = 0; j < _path[i].length; j++) 
 				{
-					paths[i][j] -= 1;
-					if (paths[i][j] < 0)
+					_path[i][j] -= 1;
+					
+					if (_path[i][j] < 0)
 					{
-						paths[i][j] = 3;
+						_path[i][j] = 3;
 					}
 				}
+			}
+			_rotationNumber -= 1;
+			if (_rotationNumber < 0)
+			{
+				_rotationNumber = 3;
 			}
 		}
 		
 		/**
-		 * Generates the random number with a range
+		 * Generate the random number with a range
 		 * @param	low
 		 * @param	high
 		 * @return random number with range
@@ -157,23 +217,108 @@ package pipe.core.piace
 		}
 		
 		/**
-		 * Get the number of selected path or index in path in array of paths.
-		 * 0 or 1
+		 * Get the name of type path.
 		 */
-		public function get pathNumEnter():int 
+		public function get pathName():String 
 		{
-			return _pathNumEnter;
+			return _pathName;
 		}
 		
 		/**
-		 * Set the number of selected path or index in path in array of paths.
-		 * 0 or 1
+		 * Set the number of rotation (max 3).
 		 */
-		public function set pathNumEnter(value:int):void 
+		public function get rotationNumber():int 
 		{
-			_pathNumEnter = value;
+			return _rotationNumber;
 		}
 		
+		/**
+		 * Get the the opposite side of exit
+		 * else returns -1 (dont have a valid path)
+		 * @param	pieceExitSide
+		 * @return entrance of piece
+		 */
+		public function getEntraceSide(pieceExitSide:int):int
+		{
+			//opposite side of piece
+			if ((pieceExitSide + 2) > 3)
+			{
+				return (pieceExitSide + 2) - 4;
+			}
+			else
+			{
+				return pieceExitSide + 2;
+			}
+			return -1;
+		}
+		
+		/**
+		 * With the entrance side, get the exit of path.
+		 * @param	entraceSide
+		 * @return the exit of path if exist a path
+		 */
+		public function getExitSide(entraceSide:int):int
+		{
+			for (var i:int = 0; i < _path.length; i++) 
+			{
+				for (var j:int = 0; j < _path[i].length; j++) 
+				{
+					if (entraceSide == _path[i][j])
+					{
+						var value:int = j == 0?  entraceSide = 1 : entraceSide = 0;
+						return _path[i][value];
+					}
+				}
+			}
+			return -1
+		}
+		
+		/**
+		 * The number of entry path
+		 * @param	entraceSide
+		 * @return umber of entry path
+		 */
+		public function getEnterNum(entraceSide:int):int
+		{
+			for (var i:int = 0; i < _path.length; i++) 
+			{
+				for (var j:int = 0; j < _path[i].length; j++) 
+				{
+					if (entraceSide == _path[i][j])
+					{
+						return j;
+					}
+				}
+			}
+			return -1
+		}
+		
+		/**
+		 * Verify if the entrance have a path to continue
+		 * @param	entranceSideNumber
+		 * @return if have path in this side
+		 */
+		public function isEntraceSideValid(entranceSideNumber:int):Boolean
+		{
+			if (entranceSideNumber == -1)
+			{
+				return false;
+			}
+			
+
+			for (var i:int = 0; i < _path.length; i++) 
+			{
+				for (var j:int = 0; j < _path[i].length; j++) 
+				{
+					if (_path[i][j] == entranceSideNumber)
+					{
+						return true;
+					}
+				}
+			}
+			
+			return false;
+		}
 
 	}
 
