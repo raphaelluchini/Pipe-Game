@@ -1,5 +1,6 @@
 package com 
 {
+	import com.pixelbreaker.ui.osx.MacMouseWheel;
 	import flash.display.MovieClip;
 	/**
 	 * ...
@@ -10,7 +11,7 @@ package com
 		
 		public function Main() 
 		{
-			
+			MacMouseWheel.setup( this.stage );
 		}
 		
 	}
