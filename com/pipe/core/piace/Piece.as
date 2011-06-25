@@ -51,7 +51,7 @@ package pipe.core.piace
 		 */
 		public function Piece() 
 		{
-			_pathNumber = 2
+			_pathNumber = randomNumber(0, 2);
 			_path = paths[pathNumber];
 			
 			switch(pathNumber)

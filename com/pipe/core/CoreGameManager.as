@@ -98,7 +98,6 @@ package pipe.core
 					{
 						timer.stop();
 						dispatchEvent(new CoreGameManagerEvent(CoreGameManagerEvent.GAME_WIN));
-						trace("Winner - Game Over")
 					}
 					else
 					{
@@ -106,21 +105,18 @@ package pipe.core
 						nextQuad = null;
 						currentQuad.piace.executePiece(nextEntrance);
 						dispatchEvent(new CoreGameManagerEvent(CoreGameManagerEvent.CHANGE_PIECE));
-						trace("Next Piece")
 					}		
 				}
 				else
 				{
 					timer.stop();
 					dispatchEvent(new CoreGameManagerEvent(CoreGameManagerEvent.GAME_LOSE));
-					trace("Wrong piece - Game Over")
 				}
 			}
 			else
 			{
 				timer.stop();
-				dispatchEvent(new CoreGameManagerEvent(CoreGameManagerEvent.GAME_LOSE));
-				trace("Haven't piece - Game Over")
+				dispatchEvent(new CoreGameManagerEvent(CoreGameManagerEvent.HAVENT_NEXT_PIECE));
 			}
 		}
 		

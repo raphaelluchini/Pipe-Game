@@ -8,15 +8,35 @@ package pipe.core
 	 */
 	public class Game extends Sprite
 	{
-		private var coreGame:CoreGame;
-		private var gameManager:CoreGameManager;
+		private var _coreGame:CoreGame;
+		private var _gameManager:CoreGameManager;
 		
 		public function Game() 
 		{
-			coreGame = new CoreGame(500,200, SkinData.SKIN_DEFAULT);
-			addChild(coreGame)
-			gameManager = new CoreGameManager(coreGame);
+			_coreGame = new CoreGame(500,200, SkinData.SKIN_STANDARD);
+			addChild(_coreGame)
+			gameManager = new CoreGameManager(_coreGame);
 			gameManager.initGame();
+		}
+		
+		public function get coreGame():CoreGame 
+		{
+			return _coreGame;
+		}
+		
+		public function set coreGame(value:CoreGame):void 
+		{
+			_coreGame = value;
+		}
+		
+		public function get gameManager():CoreGameManager 
+		{
+			return _gameManager;
+		}
+		
+		public function set gameManager(value:CoreGameManager):void 
+		{
+			_gameManager = value;
 		}
 		
 	}

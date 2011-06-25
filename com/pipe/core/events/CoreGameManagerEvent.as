@@ -9,7 +9,8 @@ package pipe.core.events
 	public class CoreGameManagerEvent extends Event 
 	{
 		public static const GAME_WIN:String = "game-win";
-		public static const GAME_LOSE:String = "game-losese";
+		public static const GAME_LOSE:String = "game-lose";
+		public static const HAVENT_NEXT_PIECE:String = "havent-next-piece";
 		public static const CHANGE_PIECE:String = "game-losese";
 		
 		public function CoreGameManagerEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false) 
