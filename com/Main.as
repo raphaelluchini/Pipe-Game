@@ -1,6 +1,5 @@
 package 
 {
-	import com.pixelbreaker.ui.osx.MacMouseWheel;
 	import flash.display.MovieClip;
 	import pipe.core.events.CoreGameManagerEvent;
 	import pipe.Pipe;
@@ -13,8 +12,6 @@ package
 		
 		public function Main() 
 		{
-			MacMouseWheel.setup( this.stage );
-			
 			var pipeGame:Pipe = new Pipe();
 			addChild(pipeGame);
 			pipeGame.game.gameManager.addEventListener(CoreGameManagerEvent.CHANGE_PIECE, onChangePiece);

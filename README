@@ -6,7 +6,5 @@ Multiple paths in piece
 Status of game events
 Easy custom skins/animation of pieces, paths and grid
 
-//next needs
-
-Create an Piece generator class for manage the creation pieces
+//TO DO
 Integrate animations using dispath events(not timer sic with timeline)

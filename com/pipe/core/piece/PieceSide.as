@@ -1,4 +1,4 @@
-package pipe.core.piace 
+package pipe.core.piece 
 {
 	/**
 	 * ...

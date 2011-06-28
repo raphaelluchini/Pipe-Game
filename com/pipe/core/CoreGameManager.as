@@ -1,8 +1,8 @@
 package pipe.core 
 {
 	import pipe.core.events.CoreGameManagerEvent;
-	import pipe.core.piace.Piece;
-	import pipe.core.piace.PieceType;
+	import pipe.core.piece.Piece;
+	import pipe.core.piece.PieceType;
 	import pipe.core.quadrant.QuadrantManager;
 	import pipe.ui.UIPiece;
 	import pipe.ui.UIQuadrant;
@@ -76,25 +76,25 @@ package pipe.core
 		 */
 		private function onTimer(event:TimerEvent):void 
 		{			
-			if (currentQuad.piace.getPieceType() == PieceType.START)
+			if (currentQuad.piece.getPieceType() == PieceType.START)
 			{
-				currentEntrance = currentQuad.piace.piaceData.path[0][0];
-				currentExit = currentQuad.piace.piaceData.path[0][1];
+				currentEntrance = currentQuad.piece.pieceData.path[0][0];
+				currentExit = currentQuad.piece.pieceData.path[0][1];
 			}
 			else
 			{
 				currentEntrance = nextEntrance;
-				currentExit = currentQuad.piace.piaceData.getExitSide(currentEntrance);
+				currentExit = currentQuad.piece.pieceData.getExitSide(currentEntrance);
 			}
 			
-			nextEntrance = currentQuad.piace.piaceData.getEntraceSide(currentExit);
+			nextEntrance = currentQuad.piece.pieceData.getEntraceSide(currentExit);
 			
 			var nextQuad:UIQuadrant = quadrantManager.getNext(currentQuad, currentExit);
-			if (nextQuad.piace)
+			if (nextQuad.piece)
 			{
-				if (nextQuad.piace.piaceData.isEntraceSideValid(nextEntrance))
+				if (nextQuad.piece.pieceData.isEntraceSideValid(nextEntrance))
 				{
-					if (nextQuad.piace.getPieceType() == PieceType.FINISH)
+					if (nextQuad.piece.getPieceType() == PieceType.FINISH)
 					{
 						timer.stop();
 						dispatchEvent(new CoreGameManagerEvent(CoreGameManagerEvent.GAME_WIN));
@@ -103,7 +103,7 @@ package pipe.core
 					{
 						currentQuad = nextQuad;
 						nextQuad = null;
-						currentQuad.piace.executePiece(nextEntrance);
+						currentQuad.piece.executePiece(nextEntrance);
 						dispatchEvent(new CoreGameManagerEvent(CoreGameManagerEvent.CHANGE_PIECE));
 					}		
 				}

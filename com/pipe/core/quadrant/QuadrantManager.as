@@ -1,7 +1,7 @@
 ﻿package pipe.core.quadrant 
 {
-	import pipe.core.piace.Piece;
-	import pipe.core.piace.PieceSide;
+	import pipe.core.piece.Piece;
+	import pipe.core.piece.PieceSide;
 	import pipe.ui.UIPiece;
 	import pipe.ui.UIQuadrant;
 	/**
@@ -123,7 +123,7 @@
 		 */
 		public function getNext(quadrant:UIQuadrant, side:int):UIQuadrant
 		{
-			if (quadrant.piace != null)
+			if (quadrant.piece != null)
 			{
 				var quadData:Quadrant = quadrant.quadrantData;
 				switch (side) 

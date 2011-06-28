@@ -1,6 +1,7 @@
 package pipe.core 
 {
-	import pipe.core.piace.PieceType;
+	import pipe.core.piece.PieceFactory;
+	import pipe.core.piece.PieceType;
 	import pipe.core.quadrant.Quadrant;
 	import pipe.core.quadrant.QuadrantManager;
 	import pipe.core.quadrant.QuadrantStage;
@@ -38,15 +39,14 @@ package pipe.core
 		
 		/**
 		 * Create a piece using the class UIPiece.
-		 * The piace have automatically a listeners
+		 * The piece have automatically a listeners
 		 * @return a UIPiece
 		 */
 		public function createPiece():UIPiece 
 		{
-			_piece = new UIPiece();
+			_piece = PieceFactory.createRandomPiece();
 			_piece.x = _pieceX;
 			_piece.y = _pieceY;
-			_piece.setPieceType(PieceType.NORMAL);
 			
 			_piece.addEventListener(MouseEvent.MOUSE_DOWN, mDown);
 			addChild(_piece);
@@ -79,7 +79,7 @@ package pipe.core
 				cacheQuadrant = quadrantManager.getQuadrant(xQuadRef, yQuadRef);
 				if (cacheQuadrant)
 				{
-					cacheQuadrant.piace = null;
+					cacheQuadrant.piece = null;
 				}
 			}
 		}
@@ -92,9 +92,7 @@ package pipe.core
 		 */
 		public function createInitPiece(xRef:int, yRef:int):UIPiece 
 		{
-			var initPiece:UIPiece = new UIPiece();
-			initPiece.piaceData.path = [[-1, 2]];
-			initPiece.setPieceType(PieceType.START);
+			var initPiece:UIPiece = PieceFactory.createInitPiece();
 			addChild(initPiece);
 			var quad:UIQuadrant = quadrantManager.getQuadrant(xRef, yRef);
 			addToQuadrant(initPiece, quad);
@@ -109,9 +107,7 @@ package pipe.core
 		 */
 		public function createFinishPiece(xRef:int, yRef:int):UIPiece 
 		{
-			var initPiece:UIPiece = new UIPiece();
-			initPiece.piaceData.path = [[2, -1]];
-			initPiece.setPieceType(PieceType.FINISH);
+			var initPiece:UIPiece = PieceFactory.createFinishPiece();
 			addChild(initPiece);
 			var quad:UIQuadrant = quadrantManager.getQuadrant(xRef, yRef);
 			addToQuadrant(initPiece, quad);
@@ -121,7 +117,7 @@ package pipe.core
 		
 		/**
 		 * OnMouseUp listener os UIPiece created
-		 * When this method dispatched, the piace loses all listners if added in a quadrant
+		 * When this method dispatched, the piece loses all listners if added in a quadrant
 		 * @param	event
 		 */
 		private function mUp(event:MouseEvent):void 
@@ -136,7 +132,7 @@ package pipe.core
 			//verifica se está dentro do quadrant
 			if (quad != null)
 			{
-				if (quad.piace == null)
+				if (quad.piece == null)
 				{
 					addToQuadrant(cachePiece, quad);
 				}
@@ -146,7 +142,7 @@ package pipe.core
 					cachePiece.y = cacheY;
 					if (cacheQuadrant)
 					{
-						cacheQuadrant.piace = cachePiece;
+						cacheQuadrant.piece = cachePiece;
 					}
 				}
 			}
@@ -156,7 +152,7 @@ package pipe.core
 				cachePiece.y = cacheY;
 				if (cacheQuadrant)
 				{
-					cacheQuadrant.piace = cachePiece;
+					cacheQuadrant.piece = cachePiece;
 				}
 			}
 			cacheQuadrant = null;
@@ -164,8 +160,8 @@ package pipe.core
 		}
 		
 		/**
-		 * Adds the piace at defined quadrant
-		 * @param	piece UIPiace
+		 * Adds the piece at defined quadrant
+		 * @param	piece UIPiece
 		 * @param	xRef Quadrant xRef
 		 * @param	yRef Quadrant yRef
 		 */
@@ -174,11 +170,11 @@ package pipe.core
 			piece.x = quad.x + (piece.width / 2);
 			piece.y = quad.y + (piece.height / 2);
 			
-			quad.piace = piece;
+			quad.piece = piece;
 			
-			if (piece.piaceData.isNew)
+			if (piece.pieceData.isNew)
 			{
-				piece.piaceData.isNew = false;
+				piece.pieceData.isNew = false;
 				createPiece();
 			}
 		}

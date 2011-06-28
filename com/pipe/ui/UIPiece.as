@@ -1,8 +1,9 @@
 package pipe.ui 
 {
-	import pipe.core.piace.Piece;
-	import pipe.core.piace.PiecePathName;
-	import pipe.core.piace.PieceType;
+	import com.earthbrowser.ebutils.MacMouseWheelHandler;
+	import pipe.core.piece.Piece;
+	import pipe.core.piece.PieceFactory;
+	import pipe.core.piece.PieceType;
 	import pipe.skin.Skin;
 	import pipe.ui.UIObject;
 	import flash.display.MovieClip;
@@ -14,7 +15,7 @@ package pipe.ui
 	 */
 	public class UIPiece extends MovieClip
 	{
-		private var _piaceData:Piece;
+		private var _pieceData:Piece;
 		private var _isDrag:Boolean;
 		private var _isInteractive:Boolean;
 		private var _skin:UIObject;
@@ -25,10 +26,9 @@ package pipe.ui
 		 * Set the type of pice
 		 * @param	piece type
 		 */
-		public function UIPiece(type:String = "normal-piece") 
+		public function UIPiece(pieceData:Piece, type:String = "normal-piece") 
 		{
-			_isInteractive = isInteractive;
-			_piaceData = new Piece();
+			_pieceData = pieceData;
 			
 			_skin = Skin.piece();
 			addChild(_skin);
@@ -72,6 +72,7 @@ package pipe.ui
 			if (_isInteractive)
 			{
 				removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+				MacMouseWheelHandler.init(stage);
 				this.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 				this.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 				stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUps);
@@ -133,17 +134,17 @@ package pipe.ui
 		 */
 		private function onMouseWheel(event:MouseEvent):void 
 		{
-			if (!piaceData.isNew || isDrag)
+			if (!pieceData.isNew || isDrag)
 			{
 				if (event.delta > 0)
 				{
 					this.rotation -= 90;
-					_piaceData.rotateLeft();
+					_pieceData.rotateLeft();
 				}
 				else
 				{
 					this.rotation += 90;
-					_piaceData.rotateRight();
+					_pieceData.rotateRight();
 				}
 			}
 		}
@@ -172,25 +173,25 @@ package pipe.ui
 				
 				case PieceType.FINISH:
 				{
-					_skin.gotoAndStop(4);
-					_piaceData.isNew = false;
+					_skin.gotoAndStop("start");
+					_pieceData.isNew = false;
 					_isInteractive = false;
 					this.killInteraction();
 					break;
 				}
 				case PieceType.START:
 				{
-					_skin.gotoAndStop(4);
-					_piaceData.isNew = false;
+					_skin.gotoAndStop("start");
+					_pieceData.isNew = false;
 					_isInteractive = false;
 					this.killInteraction();
 					break;
 				}
 				default:
 				{
-					_piaceData.isNew = true;
+					_pieceData.isNew = true;
 					_isInteractive = true;
-					_skin.gotoAndStop(_piaceData.pathNumber + 1);
+					_skin.gotoAndStop(_pieceData.pathName);
 					break;
 				}
 			}
@@ -203,9 +204,9 @@ package pipe.ui
 		public function executePiece(side:int):void
 		{
 			this.isInteractive = false;
-			if (_piaceData.pathName == PiecePathName.ONE_LINE || _piaceData.pathName == PiecePathName.ONE_CURVE)
+			if (_pieceData.pathName == PieceFactory.ONE_LINE_NAME || _pieceData.pathName == PieceFactory.ONE_CURVE_NAME)
 			{
-				if (_piaceData.rotationNumber != side)
+				if (_pieceData.rotationNumber != side)
 				{
 					_skin.animation.gotoAndPlay("init_1");
 				}
@@ -214,10 +215,10 @@ package pipe.ui
 					_skin.animation.gotoAndPlay("init_2");
 				}
 			}
-			else if (_piaceData.pathName == PiecePathName.TWO_CURVES)
+			else if (_pieceData.pathName == PieceFactory.TWO_CURVES_NAME)
 			{				
 				var paths:Array = [ { path:1, side:2 }, { path:2, side:1 }, { path:2, side:2 }, { path:1, side:1 } ];
-				var value:Number = side - _piaceData.rotationNumber;
+				var value:Number = side - _pieceData.rotationNumber;
 				if (value < 0)
 				{
 					value = value + 4;
@@ -237,17 +238,17 @@ package pipe.ui
 		/**
 		 * Get the data of piece
 		 */
-		public function get piaceData():Piece 
+		public function get pieceData():Piece 
 		{
-			return _piaceData;
+			return _pieceData;
 		}
 		
 		/**
 		 * Set the data of piece
 		 */
-		public function set piaceData(value:Piece):void 
+		public function set pieceData(value:Piece):void 
 		{
-			_piaceData = value;
+			_pieceData = value;
 		}
 		
 		/**

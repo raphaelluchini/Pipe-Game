@@ -10,7 +10,7 @@ package pipe.ui
 	public class UIQuadrant extends MovieClip
 	{
 		private var _quadrantData:Quadrant;
-		private var _piace:UIPiece;
+		private var _piece:UIPiece;
 		private var _skin:UIObject;
 		
 		/**
@@ -41,17 +41,17 @@ package pipe.ui
 		/**
 		 * Get the UIPiece object added in UIQuadrant
 		 */
-		public function get piace():UIPiece 
+		public function get piece():UIPiece 
 		{
-			return _piace;
+			return _piece;
 		}
 		
 		/**
 		 * Set the UIPiece object in UIQuadrant
 		 */
-		public function set piace(value:UIPiece):void 
+		public function set piece(value:UIPiece):void 
 		{
-			_piace = value;
+			_piece = value;
 		}
 		
 		

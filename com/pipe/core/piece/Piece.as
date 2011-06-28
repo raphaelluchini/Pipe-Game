@@ -1,29 +1,15 @@
-package pipe.core.piace 
+package pipe.core.piece 
 {
 	/**
 	 * ...
 	 * @author Raphael Luchini
 	 */
 	public class Piece 
-	{		
-		/**
-		 * Array of paths that contains the numerical sides of their entries and outputs.
-		 */
-		protected var paths:Array = [
-		[[0, 2]],
-		[[0, 1]],
-		[[0, 3],[1, 2]]
-		];
-		
+	{
 		/**
 		 * Array of selected path that contains the numerical side of their entrie and output.
 		 */
 		protected var _path:Array;
-		
-		/**
-		 * Number of selected path or index in array of paths.
-		 */
-		protected var _pathNumber:int;
 		
 		/**
 		 * The name of type path.
@@ -49,49 +35,10 @@ package pipe.core.piace
 		/**
 		 * Contructor method create the random path
 		 */
-		public function Piece() 
+		public function Piece(path:Array, pathName:String) 
 		{
-			_pathNumber = randomNumber(0, 2);
-			_path = paths[pathNumber];
-			
-			switch(pathNumber)
-			{
-				case 0:
-				{
-					_pathName = PiecePathName.ONE_LINE;
-					break;
-				}
-				case 1:
-				{
-					_pathName = PiecePathName.ONE_CURVE;
-					break;
-				}
-				case 2:
-				{
-					_pathName = PiecePathName.TWO_CURVES;
-					break;
-				}
-			}
-		}
-		
-		/**
-		 * Search the corrent path with the enter path number
-		 * @param	enter
-		 * @return array
-		 */
-		public function searchPath(enter:int):Array
-		{
-			for (var i:int = 0; i < paths.length; i++) 
-			{
-				for (var j:int = 0; j < paths[i].length; j++) 
-				{
-					if (paths[i][j] == enter)
-					{
-						return paths[i];
-					}
-				}
-			}
-			return null;
+			_path = path;
+			_pathName = pathName;
 		}
 		
 		/**
@@ -142,17 +89,6 @@ package pipe.core.piace
 			}
 		}
 		
-		/**
-		 * Generate the random number with a range
-		 * @param	low
-		 * @param	high
-		 * @return random number with range
-		 */
-		public function randomNumber(low:Number=0, high:Number=1):Number
-		{
-		  return Math.floor(Math.random() * (1+high-low)) + low;
-		}
-		
 		//Geters And Seters
 		
 		public function get isNew():Boolean 
@@ -182,22 +118,6 @@ package pipe.core.piace
 		public function set used(value:Boolean):void 
 		{
 			_used = value;
-		}
-		
-		/**
-		 * Get the number of selected path or index in array of paths.
-		 */
-		public function get pathNumber():int 
-		{
-			return _pathNumber;
-		}
-		
-		/**
-		 * Set the number of selected path or index in array of paths.
-		 */
-		public function set pathNumber(value:int):void 
-		{
-			_pathNumber = value;
 		}
 		
 		/**
@@ -305,7 +225,6 @@ package pipe.core.piace
 				return false;
 			}
 			
-
 			for (var i:int = 0; i < _path.length; i++) 
 			{
 				for (var j:int = 0; j < _path[i].length; j++) 

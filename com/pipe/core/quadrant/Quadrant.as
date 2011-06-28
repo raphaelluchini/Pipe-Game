@@ -1,6 +1,6 @@
 package pipe.core.quadrant 
 {
-	import pipe.core.piace.Piece;
+	import pipe.core.piece.Piece;
 	/**
 	 * ...
 	 * @author Raphael Luchini
