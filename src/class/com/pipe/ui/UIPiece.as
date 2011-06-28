@@ -8,6 +8,7 @@ package com.pipe.ui
 	import com.pipe.core.piece.PieceType;
 	import com.pipe.skin.Skin;
 	import com.pipe.ui.UIObject;
+	import flash.utils.getTimer;
 	import org.libspark.ui.SWFWheel;
 	/**
 	 * ...
@@ -170,10 +171,8 @@ package com.pipe.ui
 			
 			switch (_pieceType) 
 			{
-				
 				case PieceType.FINISH:
 				{
-					_skin.gotoAndStop("start");
 					_pieceData.isNew = false;
 					_isInteractive = false;
 					this.killInteraction();
@@ -181,7 +180,6 @@ package com.pipe.ui
 				}
 				case PieceType.START:
 				{
-					_skin.gotoAndStop("start");
 					_pieceData.isNew = false;
 					_isInteractive = false;
 					this.killInteraction();
@@ -191,10 +189,10 @@ package com.pipe.ui
 				{
 					_pieceData.isNew = true;
 					_isInteractive = true;
-					_skin.gotoAndStop(_pieceData.pathName);
 					break;
 				}
 			}
+			_skin.gotoAndStop(_pieceData.pathName);
 		}
 		
 		/**
@@ -232,6 +230,10 @@ package com.pipe.ui
 				{
 					_skin.animation1.gotoAndPlay("init_" + paths[value].side);
 				}
+			}
+			else if (_pieceData.pathName == PieceFactory.START_NAME || _pieceData.pathName == PieceFactory.FINISH_NAME)
+			{
+				_skin.animation.gotoAndPlay("init");
 			}
 		}
 		

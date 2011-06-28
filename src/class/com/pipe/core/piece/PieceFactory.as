@@ -14,7 +14,7 @@ package com.pipe.core.piece
 		public static const TWO_CURVES_NAME:String = "two-curves";
 		
 		public static const START_NAME:String = "start";
-		public static const FINISH_NAME:String = "start";
+		public static const FINISH_NAME:String = "finish";
 		
 		/**
 		 * Create the finish piece, where the game ends

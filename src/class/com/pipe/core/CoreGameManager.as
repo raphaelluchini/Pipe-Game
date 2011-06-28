@@ -1,5 +1,6 @@
 package com.pipe.core 
 {
+	import com.pipe.skin.events.SkinEvent;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
@@ -25,7 +26,7 @@ package com.pipe.core
 		/**
 		 * Reference of finish quadrant for finish piece.
 		 */
-		private var finishQuadrant:Array = [3, 2];
+		private var finishQuadrant:Array = [5, 4];
 		
 		/**
 		 * Current quadrand to verify.
@@ -65,6 +66,7 @@ package com.pipe.core
 			timer = new Timer(3000);
 			timer.addEventListener(TimerEvent.TIMER, onTimer);
 			currentQuad = quadrantManager.getQuadrant(initQuadrant[0], initQuadrant[1]);
+			currentQuad.piece.executePiece(-1);
 			timer.start();
 		}
 		
@@ -73,11 +75,13 @@ package com.pipe.core
 		 * @param	event
 		 */
 		private function onTimer(event:TimerEvent):void 
-		{			
+		{
+			
 			if (currentQuad.piece.getPieceType() == PieceType.START)
 			{
 				currentEntrance = currentQuad.piece.pieceData.path[0][0];
 				currentExit = currentQuad.piece.pieceData.path[0][1];
+				
 			}
 			else
 			{
@@ -94,6 +98,7 @@ package com.pipe.core
 				{
 					if (nextQuad.piece.getPieceType() == PieceType.FINISH)
 					{
+						nextQuad.piece.executePiece(-1);
 						timer.stop();
 						dispatchEvent(new CoreGameManagerEvent(CoreGameManagerEvent.GAME_WIN));
 					}
@@ -103,7 +108,8 @@ package com.pipe.core
 						nextQuad = null;
 						currentQuad.piece.executePiece(nextEntrance);
 						dispatchEvent(new CoreGameManagerEvent(CoreGameManagerEvent.CHANGE_PIECE));
-					}		
+					}
+					
 				}
 				else
 				{
@@ -117,7 +123,6 @@ package com.pipe.core
 				dispatchEvent(new CoreGameManagerEvent(CoreGameManagerEvent.HAVENT_NEXT_PIECE));
 			}
 		}
-		
 	}
 
 }

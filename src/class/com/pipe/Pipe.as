@@ -10,7 +10,7 @@ package com.pipe
 	{
 		private var _game:Game;
 		
-		public function Pipe() 
+		public function Pipe()
 		{
 			_game = new Game();
 			addChild(_game)
