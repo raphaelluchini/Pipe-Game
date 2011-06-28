@@ -13,7 +13,7 @@
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="com" />
+    <class path="src\class" />
   </classpaths>
   <!-- Build options -->
   <build>
