@@ -1,4 +1,4 @@
-package com.pipe.ui 
+﻿package com.pipe.ui 
 {
 	import flash.display.MovieClip;
 	import flash.events.Event;
@@ -7,7 +7,6 @@ package com.pipe.ui
 	import com.pipe.core.piece.PieceFactory;
 	import com.pipe.core.piece.PieceType;
 	import com.pipe.skin.Skin;
-	import com.pipe.ui.UIObject;
 	import flash.utils.getTimer;
 	import org.libspark.ui.SWFWheel;
 	/**
@@ -19,7 +18,7 @@ package com.pipe.ui
 		private var _pieceData:Piece;
 		private var _isDrag:Boolean;
 		private var _isInteractive:Boolean;
-		private var _skin:UIObject;
+		private var _skin:MovieClip;
 		protected var _pieceType:String;
 		private var addedOnStage:Boolean;
 		

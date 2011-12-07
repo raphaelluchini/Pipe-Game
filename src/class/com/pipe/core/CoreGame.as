@@ -1,4 +1,4 @@
-package com.pipe.core 
+﻿package com.pipe.core 
 {
 	import com.pipe.core.piece.PieceFactory;
 	import com.pipe.core.piece.PieceType;
@@ -6,7 +6,6 @@ package com.pipe.core
 	import com.pipe.core.quadrant.QuadrantManager;
 	import com.pipe.core.quadrant.QuadrantStage;
 	import com.pipe.skin.Skin;
-	import com.pipe.ui.UIObject;
 	import com.pipe.ui.UIPiece;
 	import com.pipe.ui.UIQuadrant;
 	import com.utils.DepthManager;
@@ -28,11 +27,10 @@ package com.pipe.core
 		private var cachePiece:UIPiece;
 		
 		/**
-		 * The cinstructor method needs the piece x and y for know where the pieces is added
+		 * The constructor method needs the piece x and y for know where the pieces is added
 		 */
-		public function CoreGame(pieceX:Number, pieceY:Number, skinName:String = "default") 
+		public function CoreGame(pieceX:Number, pieceY:Number) 
 		{
-			Skin.setSkinName(skinName);
 			_pieceY = pieceY;
 			_pieceX = pieceX;
 		}
@@ -61,7 +59,6 @@ package com.pipe.core
 		 */
 		private function mDown(event:MouseEvent):void 
 		{
-			
 			var currentPiece:UIPiece = event.currentTarget as UIPiece;
 			if (currentPiece.isInteractive)
 			{

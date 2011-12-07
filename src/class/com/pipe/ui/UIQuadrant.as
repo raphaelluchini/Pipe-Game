@@ -11,7 +11,7 @@ package com.pipe.ui
 	{
 		private var _quadrantData:Quadrant;
 		private var _piece:UIPiece;
-		private var _skin:UIObject;
+		private var _skin:MovieClip;
 		
 		/**
 		 * Constructor method adds the current skin

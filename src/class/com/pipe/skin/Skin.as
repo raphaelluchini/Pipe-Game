@@ -1,13 +1,13 @@
 package  com.pipe.skin
 {
-	import com.pipe.ui.UIObject;
+	import flash.display.MovieClip;
 	import flash.utils.Dictionary;
 
 	public class Skin extends SkinData
 	{
 		protected static var _instance:Skin;
 		protected static var _canInit:Boolean = false;
-		protected static var _skinName:String;
+		protected static var _skinSource:String;
 		
 		public function Skin()
 		{
@@ -15,43 +15,31 @@ package  com.pipe.skin
 			{
 				throw new Error('Skin is an singleton and cannot be instantiated.');
 			}
-			
-			skins = getSkins();
 		}
 		
-		public static function piece():UIObject
+		public static function piece():MovieClip
 		{
-			return getInstance().piece();
+			return getInstance().getPiece();
 		}
 		
-		public static function quadrant():UIObject
+		public static function quadrant():MovieClip
 		{
-			return getInstance().quadrant();
+			return getInstance().getQuadrant();
 		}
 		
-		public static function setSkinName(skinName:String):void
+		public static function setSkin(skinSource:String, skinFolder:String = ""):void
 		{
-			getInstance().setSkinName(skinName);
+			getInstance().setSkin(skinSource, skinFolder);
 		}
 		
-		protected function quadrant():UIObject
+		protected function setSkin(skinSource:String, skinFolder:String = ""):void
 		{
-			skins = getSkins();
-			return skins[_skinName +"-" + OBJECT_QUADRANT];
+			_skinSource = skinSource;
+			this.setSkinFolder(skinFolder);
+			this.loadSkin(_skinSource);
 		}
 
-		protected function piece():UIObject
-		{
-			skins = getSkins();
-			return skins[_skinName +"-" + OBJECT_PIECE];
-		}
-		
-		protected function setSkinName(skinName:String):void
-		{
-			_skinName = skinName;
-		}
-		
-		protected static function getInstance():Skin
+		public static function getInstance():Skin
 		{
 			if (_instance == null)
 			{

@@ -14,6 +14,10 @@ package com.pipe.core
 	 */
 	public class CoreGameManager extends EventDispatcher
 	{
+		/**
+		* Duration of piece animation in ms
+		*/
+		public var pieaceTime:Number = 3000;
 		private var _coreGame:CoreGame;
 		private var timer:Timer;
 		
@@ -63,7 +67,7 @@ package com.pipe.core
 		 */
 		public function initVerification():void 
 		{
-			timer = new Timer(3000);
+			timer = new Timer(pieaceTime);
 			timer.addEventListener(TimerEvent.TIMER, onTimer);
 			currentQuad = quadrantManager.getQuadrant(initQuadrant[0], initQuadrant[1]);
 			currentQuad.piece.executePiece(-1);
@@ -76,7 +80,6 @@ package com.pipe.core
 		 */
 		private function onTimer(event:TimerEvent):void 
 		{
-			
 			if (currentQuad.piece.getPieceType() == PieceType.START)
 			{
 				currentEntrance = currentQuad.piece.pieceData.path[0][0];
